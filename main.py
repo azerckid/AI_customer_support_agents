@@ -1,23 +1,16 @@
 from openai import OpenAI
 import asyncio
 import streamlit as st
-from agents import Runner, SQLiteSession, function_tool, RunContextWrapper
+from agents import Runner, SQLiteSession
 from models import UserAccountContext
-
-
-@function_tool
-def get_user_tier(wrapper: RunContextWrapper[UserAccountContext]):
-
-    return (
-        f"The user {wrapper.context.customer_id} has a {wrapper.context.tier} account."
-    )
 
 
 client = OpenAI()
 
 user_account_ctx = UserAccountContext(
     customer_id=1,
-    name="nico",
+    name="henry",
+    email="henry@example.com",
     tier="basic",
 )
 
