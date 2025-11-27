@@ -1,12 +1,19 @@
 from openai import OpenAI
 import asyncio
+import os
 import streamlit as st
+from dotenv import load_dotenv
 from agents import Runner, SQLiteSession, InputGuardrailTripwireTriggered
 from models import UserAccountContext
 from my_agents.triage_agent import triage_agent
+from my_agents.account_agent import account_agent
+from my_agents.billing_agent import billing_agent
+from my_agents.order_agent import order_agent
+from my_agents.technical_agent import technical_agent
 
+load_dotenv()
 
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 user_account_ctx = UserAccountContext(
     customer_id=1,
@@ -33,7 +40,7 @@ async def paint_history():
                     st.write(message["content"])
                 else:
                     if message["type"] == "message":
-                        st.write(message["content"][0]["text"].replace("$", "\$"))
+                        st.write(message["content"][0]["text"].replace("$", "\\$"))
 
 
 asyncio.run(paint_history())
@@ -61,7 +68,7 @@ async def run_agent(message):
 
                     if event.data.type == "response.output_text.delta":
                         response += event.data.delta
-                        text_placeholder.write(response.replace("$", "\$"))
+                        text_placeholder.write(response.replace("$", "\\$"))
         except InputGuardrailTripwireTriggered:
             st.write("I can't help you with that.")
 
