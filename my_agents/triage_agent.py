@@ -106,7 +106,7 @@ def handle_handoff(
             Reason: {input_data.reason}
             Issue Type: {input_data.issue_type}
             Description: {input_data.issue_description}
-            """
+        """
         )
 
 
