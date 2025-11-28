@@ -1,4 +1,5 @@
 from agents import Agent, RunContextWrapper, Runner, input_guardrail, GuardrailFunctionOutput, handoff
+from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
 from models import UserAccountContext, InputGuardRailOutput, HandoffData
 import streamlit as st
 from my_agents.account_agent import account_agent
@@ -41,6 +42,10 @@ def dynamic_triage_agent_instructions(
     agent: Agent[UserAccountContext],
 ):
     return f"""
+        SPEAK TO THE USER IN ENGLISH
+
+        {RECOMMENDED_PROMPT_PREFIX}
+
         You are a customer support agent. You ONLY help customers with their questions about their User Account, Billing, Orders, or Technical Support.
         You call customers by their name.
 
@@ -121,9 +126,9 @@ def make_handoff(agent):
 triage_agent = Agent(
     name="Triage Agent",
     instructions=dynamic_triage_agent_instructions,
-    input_guardrails=[
-        off_topic_guardrail,
-    ],
+    # input_guardrails=[
+    #     off_topic_guardrail,
+    # ],
 
     handoffs=[
         make_handoff(technical_agent),
